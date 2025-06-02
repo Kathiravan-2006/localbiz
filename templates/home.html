@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LocalBiz - Discover Local Businesses{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center py-5">
+    <div class="container">
+        <h1 class="display-4 mb-4">Discover Local Businesses in Your Community</h1>
+        <p class="lead mb-4">Connect with trusted local businesses, read authentic reviews, and support your community.</p>
+        <div class="search-box mb-4">
+            <form action="{% url 'search' %}" method="GET" class="d-flex justify-content-center">
+                <div class="input-group" style="max-width: 800px;">
+                    <input type="text" name="q" class="form-control" placeholder="Search for businesses, services, or categories..." value="{{ request.GET.q }}">
+                    <select name="category" class="form-select" style="max-width: 150px;">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}" {% if request.GET.category == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="rating" class="form-select" style="max-width: 120px;">
+                        <option value="">All Ratings</option>
+                        <option value="4" {% if request.GET.rating == '4' %}selected{% endif %}>4+ Stars</option>
+                        <option value="3" {% if request.GET.rating == '3' %}selected{% endif %}>3+ Stars</option>
+                        <option value="2" {% if request.GET.rating == '2' %}selected{% endif %}>2+ Stars</option>
+                        <option value="1" {% if request.GET.rating == '1' %}selected{% endif %}>1+ Star</option>
+                    </select>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Choose LocalBiz?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <i class="fas fa-store fa-3x mb-3 text-primary"></i>
+                    <h3>Local Business Directory</h3>
+                    <p>Find and explore local businesses in your area with detailed information and authentic reviews.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <i class="fas fa-star fa-3x mb-3 text-primary"></i>
+                    <h3>Trusted Reviews</h3>
+                    <p>Read and share honest reviews from real customers to make informed decisions.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <i class="fas fa-map-marker-alt fa-3x mb-3 text-primary"></i>
+                    <h3>Location Based</h3>
+                    <p>Discover businesses near you with our smart location-based search and filtering.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Popular Categories</h2>
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-3 col-6">
+                <a href="{% url 'category' category %}" class="category-card">
+                    <i class="fas fa-{% if category == 'Restaurants' %}utensils{% elif category == 'Retail' %}shopping-bag{% elif category == 'Services' %}tools{% elif category == 'Health' %}heartbeat{% else %}store{% endif %}"></i>
+                    <span>{{ category }}</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section py-5 bg-primary text-white text-center">
+    <div class="container">
+        <h2 class="mb-4">Are You a Local Business Owner?</h2>
+        <p class="lead mb-4">Join our platform to reach more customers and grow your business.</p>
+        <a href="{% url 'register' %}" class="btn btn-light btn-lg">List Your Business</a>
+    </div>
+</section>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Featured Businesses</h2>
+    <div class="row">
+        {% for business in featured_businesses %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ business.name }}</h5>
+                        <p class="card-text">{{ business.category }}</p>
+                        {% if business.avg_rating is not None %}
+                            <p class="card-text">Rating: {{ business.avg_rating|floatformat:1 }}</p>
+                        {% else %}
+                            <p class="card-text">No ratings yet.</p>
+                        {% endif %}
+                        <a href="{% url 'business_detail' business.pk %}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>No featured businesses available.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'create_business' %}" class="btn btn-success btn-lg">Add Your Business</a>
+    </div>
+
+    <h2 class="text-center mt-5 mb-4">Categories</h2>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{% static "images/hero-bg.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    color: var(--primary-color);
+}
+
+.category-card i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.search-box .input-group {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.search-box .form-control,
+.search-box .form-select {
+    border: none;
+    padding: 15px 25px;
+}
+
+.search-box .btn {
+    padding: 15px 30px;
+    border-radius: 0 50px 50px 0;
+}
+</style>
+{% endblock %} 

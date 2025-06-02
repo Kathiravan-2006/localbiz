@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - LocalBiz{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <div class="contact-header">
+        <h1>Contact Us</h1>
+        <p>We'd love to hear from you! Send us a message and we'll get back to you as soon as possible.</p>
+    </div>
+
+    <div class="contact-content">
+        <div class="contact-info">
+            <div class="info-item">
+                <h3>Email</h3>
+                <p>info@localbiz.com</p>
+            </div>
+            <div class="info-item">
+                <h3>Phone</h3>
+                <p>739701794</p>
+            </div>
+            <div class="info-item">
+                <h3>Address</h3>
+                <p>123 Business Street<br>City, State 12345</p>
+            </div>
+            <div class="info-item">
+                <h3>Business Hours</h3>
+                <p>Monday - Friday: 9:00 AM - 5:00 PM<br>Saturday: 10:00 AM - 2:00 PM<br>Sunday: Closed</p>
+            </div>
+        </div>
+
+        <div class="contact-form-container">
+            <h2>Send Us a Message</h2>
+            <form method="post" class="contact-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

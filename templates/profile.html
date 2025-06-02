@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - LocalBiz{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Profile</h1>
+        <p>Welcome, {{ user.username }}!</p>
+    </div>
+
+    <div class="profile-sections">
+        <div class="profile-section">
+            <h2>Personal Information</h2>
+            <form method="post" class="profile-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Update Profile</button>
+            </form>
+        </div>
+
+        <div class="profile-section">
+            <h2>My Businesses</h2>
+            {% if user_businesses %}
+                <div class="business-list">
+                    {% for business in user_businesses %}
+                        <div class="business-item">
+                            <h3>{{ business.name }}</h3>
+                            <p class="category">{{ business.category }}</p>
+                            <div class="business-actions">
+                                <a href="{% url 'business_detail' business.pk %}" class="button">View</a>
+                                <a href="{% url 'edit_business' business.pk %}" class="button">Edit</a>
+                                <a href="{% url 'delete_business' business.pk %}" class="button delete">Delete</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>You haven't added any businesses yet.</p>
+                <a href="{% url 'create_business' %}" class="button">Add Your First Business</a>
+            {% endif %}
+        </div>
+
+        <div class="profile-section">
+            <h2>My Reviews</h2>
+            {% if user_reviews %}
+                <div class="review-list">
+                    {% for review in user_reviews %}
+                        <div class="review-item">
+                            <h3>{{ review.business.name }}</h3>
+                            <div class="rating">
+                                {% with ''|center:review.rating as range %}
+                                    {% for _ in range %}
+                                        <span class="star">★</span>
+                                    {% endfor %}
+                                {% endwith %}
+                            </div>
+                            <p class="review-comment">{{ review.comment }}</p>
+                            <p class="review-date">{{ review.created_at|date:"F j, Y" }}</p>
+                            {% if review.reply %}
+                                <div class="review-reply">
+                                    <h4>Owner's Response:</h4>
+                                    <p>{{ review.reply }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>You haven't written any reviews yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category }} - LocalBiz{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">{{ category }}</h1>
+    
+    {% if businesses %}
+        <div class="row g-4">
+            {% for business in businesses %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        {% if business.image %}
+                            <img src="{{ business.image.url }}" class="card-img-top" alt="{{ business.name }}">
+                        {% else %}
+                            <img src="{% static 'images/default-business.jpg' %}" class="card-img-top" alt="{{ business.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ business.name }}</h5>
+                            <p class="card-text text-muted">
+                                <i class="fas fa-map-marker-alt me-2"></i>{{ business.address }}
+                            </p>
+                            <div class="rating mb-3">
+                                {% comment %}
+                                Iterate over business.star_range list from the view to display stars
+                                {% endcomment %}
+                                {% for _ in business.star_range %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% endfor %}
+                                {% comment %}
+                                Display half star if average rating is not a whole number (optional, requires more logic)
+                                This is a placeholder comment.
+                                {% endcomment %}
+                                <span class="text-muted ms-2">({{ business.reviews.count }} reviews)</span>
+                            </div>
+                            <a href="{% url 'business_detail' business.pk %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if businesses.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if businesses.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ businesses.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in businesses.paginator.page_range %}
+                        {% if businesses.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if businesses.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ businesses.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-store fa-3x text-muted mb-3"></i>
+            <h3>No businesses found</h3>
+            <p class="text-muted">There are no businesses in this category yet.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
