@@ -18,47 +18,6 @@ LocalBiz is a Django-based web application that serves as a directory for local 
 - MongoDB
 - pip (Python package manager)
 
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/localbiz.git
-cd localbiz
-```
-
-2. Create a virtual environment and activate it:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install the required packages:
-```bash
-pip install -r requirements.txt
-```
-
-4. Configure MongoDB:
-- Make sure MongoDB is installed and running on your system
-- The application will automatically create a database named 'localbiz_db'
-
-5. Run migrations:
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-6. Create a superuser:
-```bash
-python manage.py createsuperuser
-```
-
-7. Run the development server:
-```bash
-python manage.py runserver
-```
-
-The application will be available at mongodb://localhost:27017
-
 ## Usage
 
 ### For Business Owners
